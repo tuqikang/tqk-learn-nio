@@ -1,4 +1,4 @@
-package cn.tqktqk.springmybatislearn.javaio.io.fake;
+package cn.tqktqk.netty.io.fake;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;

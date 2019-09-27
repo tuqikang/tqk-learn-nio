@@ -1,4 +1,4 @@
-package cn.tqktqk.springmybatislearn.javaio.io.fake;
+package cn.tqktqk.netty.io.fake;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,6 +1,6 @@
-package cn.tqktqk.springmybatislearn.javaio.io.fake;
+package cn.tqktqk.netty.io.fake;
 
-import cn.tqktqk.springmybatislearn.javaio.io.TimeServerHandler;
+import cn.tqktqk.netty.io.TimeServerHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
