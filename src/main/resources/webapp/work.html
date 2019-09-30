@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+</head>
+<body>
+<script type="text/javascript">
+    function hello() {
+        var ta = document.getElementById("circulation");
+        ta.value = "hello world"+"\n"+ev.data;
+    }
+
+</script>
+
+<form onsubmit="return false;">
+    <textarea name="message" style="width:400px;height: 200px"></textarea>
+    <input type="button" value="发送数据" onclick="send(this.form.message.value)">
+    <h3>服务器端输出:</h3>
+
+
+    <textarea id="responseText" style="width:400px;height: 300px;"></textarea>
+    <input type="button" onclick="javascript: document.getElementById('responseText').value=''" value="清空内容">
+
+    <textarea id="circulation"  style="width:400px;height: 300px;"></textarea>
+    <input type="button" onclick="javascript:var obj = document.getElementById('circulation');for (var i=0;i<10;i++){obj.value=obj.value+i+'\n'}" value="开始循环">
+</form>
+</body>
+</html>
