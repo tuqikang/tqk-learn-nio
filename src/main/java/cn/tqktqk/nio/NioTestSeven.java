@@ -1,9 +1,6 @@
 package cn.tqktqk.nio;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 
 /**
  * █████▒█      ██  ▄████▄   ██ ▄█▀       ██████╗ ██╗   ██╗ ██████╗
@@ -17,35 +14,23 @@ import java.nio.channels.FileChannel;
  * ░     ░ ░      ░  ░
  *
  * @author ：涂齐康
- * @date ：Created in 2019/10/12 12:48 下午
+ * @date ：Created in 2019/10/13 1:13 下午
  * @description：
  * @modified By：
  * @version:
  */
-public class NioTestFour {
-    public static void main(String[] args) throws Exception{
-        FileOutputStream fos = new FileOutputStream("OutTest");
-        FileInputStream fis = new FileInputStream("InTest");
-
+public class NioTestSeven {
+    public static void main(String[] args) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(10);
-        FileChannel inChannel = fis.getChannel();
-//        inChannel.read(byteBuffer);
-        FileChannel outChannel = fos.getChannel();
-//        byteBuffer.flip();
-//        outChannel.write(byteBuffer);
-
-        while (true){
-            byteBuffer.clear();
-            int read = inChannel.read(byteBuffer);
-            System.out.println("read:"+read);
-            if (read==-1){
-                break;
-            }
-            byteBuffer.flip();
-
-            outChannel.write(byteBuffer);
+        System.out.println(byteBuffer.getClass());
+        for (int i = 0; i < byteBuffer.capacity(); i++) {
+            byteBuffer.put((byte) i);
         }
-        inChannel.close();
-        outChannel.close();
+        ByteBuffer onlyBuffer = byteBuffer.asReadOnlyBuffer();
+        onlyBuffer.flip();
+        for (int i = 0; i < onlyBuffer.capacity(); i++) {
+            System.out.println(onlyBuffer.get());
+        }
+        System.out.println(onlyBuffer.getClass());
     }
 }

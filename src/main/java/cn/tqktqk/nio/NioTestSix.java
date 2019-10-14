@@ -1,9 +1,6 @@
 package cn.tqktqk.nio;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 
 /**
  * █████▒█      ██  ▄████▄   ██ ▄█▀       ██████╗ ██╗   ██╗ ██████╗
@@ -17,35 +14,35 @@ import java.nio.channels.FileChannel;
  * ░     ░ ░      ░  ░
  *
  * @author ：涂齐康
- * @date ：Created in 2019/10/12 12:48 下午
+ * @date ：Created in 2019/10/13 1:02 下午
  * @description：
  * @modified By：
  * @version:
  */
-public class NioTestFour {
-    public static void main(String[] args) throws Exception{
-        FileOutputStream fos = new FileOutputStream("OutTest");
-        FileInputStream fis = new FileInputStream("InTest");
-
+public class NioTestSix {
+    public static void main(String[] args) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(10);
-        FileChannel inChannel = fis.getChannel();
-//        inChannel.read(byteBuffer);
-        FileChannel outChannel = fos.getChannel();
-//        byteBuffer.flip();
-//        outChannel.write(byteBuffer);
-
-        while (true){
-            byteBuffer.clear();
-            int read = inChannel.read(byteBuffer);
-            System.out.println("read:"+read);
-            if (read==-1){
-                break;
-            }
-            byteBuffer.flip();
-
-            outChannel.write(byteBuffer);
+        for (int i = 0; i < byteBuffer.capacity(); i++) {
+            byteBuffer.put((byte) i);
         }
-        inChannel.close();
-        outChannel.close();
+        for (int i = 0; i <byteBuffer.capacity(); i++) {
+            System.out.print(byteBuffer.get(i)+",");
+        }
+
+        byteBuffer.position(1);
+        byteBuffer.limit(8);
+        ByteBuffer slice = byteBuffer.slice();
+
+        for (int i = 0; i < slice.capacity(); i++) {
+            byte b = slice.get(i);
+            b+=1;
+            slice.put(i,b);
+        }
+        System.out.println();
+        byteBuffer.position(0);
+        byteBuffer.limit(byteBuffer.capacity());
+        for (int i = 0; i <byteBuffer.capacity(); i++) {
+            System.out.print(byteBuffer.get(i)+",");
+        }
     }
 }

@@ -1,9 +1,6 @@
 package cn.tqktqk.nio;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 
 /**
  * █████▒█      ██  ▄████▄   ██ ▄█▀       ██████╗ ██╗   ██╗ ██████╗
@@ -17,35 +14,21 @@ import java.nio.channels.FileChannel;
  * ░     ░ ░      ░  ░
  *
  * @author ：涂齐康
- * @date ：Created in 2019/10/12 12:48 下午
+ * @date ：Created in 2019/10/13 12:56 下午
  * @description：
  * @modified By：
  * @version:
  */
-public class NioTestFour {
-    public static void main(String[] args) throws Exception{
-        FileOutputStream fos = new FileOutputStream("OutTest");
-        FileInputStream fis = new FileInputStream("InTest");
+public class NioTestFive {
+    public static void main(String[] args) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        byteBuffer.putChar('h');
+        byteBuffer.putInt(21);
+        byteBuffer.putLong(1_000_000L);
+        byteBuffer.flip();
+        System.out.println(byteBuffer.getChar());
+        System.out.println(byteBuffer.getInt());
+        System.out.println(byteBuffer.getLong());
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(10);
-        FileChannel inChannel = fis.getChannel();
-//        inChannel.read(byteBuffer);
-        FileChannel outChannel = fos.getChannel();
-//        byteBuffer.flip();
-//        outChannel.write(byteBuffer);
-
-        while (true){
-            byteBuffer.clear();
-            int read = inChannel.read(byteBuffer);
-            System.out.println("read:"+read);
-            if (read==-1){
-                break;
-            }
-            byteBuffer.flip();
-
-            outChannel.write(byteBuffer);
-        }
-        inChannel.close();
-        outChannel.close();
     }
 }
