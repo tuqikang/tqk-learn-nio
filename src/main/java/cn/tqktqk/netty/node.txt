@@ -26,7 +26,8 @@
             底层new HeapByteBuffer() 位于堆，和普通对象没区别。实际多了一次数据拷贝的过程，会把java内存中的数据放在java外 native 堆中，然后和io设备进行操作
             ByteBuffer byteBuffer = ByteBuffer.allocate(10);
 
-            内存映射文件创建直接缓冲区
+            内存映射文件创建直接缓冲区 --- MappedByteBuffer是一个文件的内存映射区域,表示这个文件的内容被映射到内存，我们只需要和内存打交道就行了，
+            内容最后会被写回去磁盘
             MappedByteBuffer mbb = fc.map( FileChannel.MapMode.READ_WRITE,     0, 1024 );
 
             0<= mark <= position <= limit <= capacity
