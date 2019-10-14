@@ -20,7 +20,14 @@
 
             直接字节缓冲区，Java 虚拟机将尽最大努力直接对它执行本机 I/O 操作。
             也就是说，它会在每一次调用底层操作系统的本机 I/O 操作之前(或之后)，尝试避免将缓冲区的内容拷贝到一个中间缓冲区中(或者从一个中间缓冲区中拷贝数据)。
-            内存映射文件创建直接缓冲区
+            直接缓冲buffer: c/c++ malloc函数 buffer有个成员变量long address专门给dirtybuffer使用，指向堆外内存（直接内存）的地址，能直接找到数据。
+            少了一次数据拷贝的过程，zero copy.回收时，会找到对应的address，然后jni会把该堆外内存回收
+
+            底层new HeapByteBuffer() 位于堆，和普通对象没区别。实际多了一次数据拷贝的过程，会把java内存中的数据放在java外 native 堆中，然后和io设备进行操作
+            ByteBuffer byteBuffer = ByteBuffer.allocate(10);
+
+            内存映射文件创建直接缓冲区 --- MappedByteBuffer是一个文件的内存映射区域,表示这个文件的内容被映射到内存，我们只需要和内存打交道就行了，
+            内容最后会被写回去磁盘
             MappedByteBuffer mbb = fc.map( FileChannel.MapMode.READ_WRITE,     0, 1024 );
 
             0<= mark <= position <= limit <= capacity
