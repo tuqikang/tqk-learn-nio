@@ -11,6 +11,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import java.util.Objects;
 
 /**
  * █████▒█      ██  ▄████▄   ██ ▄█▀       ██████╗ ██╗   ██╗ ██████╗
@@ -51,9 +52,9 @@ public class NioCodecTest {
         System.out.println("-------------");
 
         Charset charset = Charset.forName("utf-8");
-        //字节数组->字符串  解码器
+        //解码器
         CharsetDecoder charsetDecoder = charset.newDecoder();
-        //字符串->字节数组 编码器
+        //编码器
         CharsetEncoder charsetEncoder = charset.newEncoder();
 
         //字符缓冲
