@@ -51,3 +51,67 @@
                         绪状态Channel的集合，进行后续的I/O操作。
                  一个多路复用器可以同时轮询多个Channel，由于JDK使用epoll()代替传统的select实现，所以它并没有最大
                  连接句柄1024/2048的限制。这也就一位置只需要一个线程负责Selector的轮询，就可以接入成千上万的客户端
+
+<---------------------Channelhandler------------------------>
+ChannelHandler充当了处理入站和出站数据的应用程序逻辑的容器，该类是基于事件驱动的，它会响应相关的事件然后去调用其关联的回调函数，
+例如当一个新的连接被建立时，ChannelHandler的channelActive()方法将会被调用。
+
+关于入站消息和出站消息的数据流向定义，如果以客户端为主视角来说的话，那么从客户端流向服务器的数据被称为出站，反之为入站。
+入站事件是可能被入站数据或者相关的状态更改而触发的事件，包括：连接已被激活、连接失活、读取入站数据、用户事件、发生异常等。
+出站事件是未来将会触发的某个动作的结果的事件，这些动作包括：打开或关闭远程节点的连接、将数据写（或冲刷）到套接字。
+
+ChannelHandler的主要用途包括：
+对入站与出站数据的业务逻辑处理
+
+记录日志
+
+将数据从一种格式转换为另一种格式，实现编解码器。以一次HTTP协议（或者其他应用层协议）的流程为例，数据在网络传输时的单位为字节，
+当客户端发送请求到服务器时，服务器需要通过解码器（处理入站消息）将字节解码为协议的消息内容，服务器在发送响应的时候（处理出站消息），
+还需要通过编码器将消息内容编码为字节。
+
+捕获异常
+
+提供Channel生命周期内的通知，如Channel活动时与非活动时
+
+Netty中到处都充满了异步与事件驱动，而回调函数正是用于响应事件之后的操作。由于异步会直接返回一个结果，
+所以Netty提供了ChannelFuture（实现了java.util.concurrent.Future）来作为异步调用返回的占位符，
+真正的结果会在未来的某个时刻完成，到时候就可以通过ChannelFuture对其进行访问，每个Netty的出站I/O操作都将会返回一个ChannelFuture。
+
+Netty还提供了ChannelFutureListener接口来监听ChannelFuture是否成功
+Channel channel = ...
+ChannelFuture future = channel.connect(new InetSocketAddress("192.168.0.1",6666));
+// 注册一个监听器
+future.addListener(new ChannelFutureListener() {
+	@Override
+	public void operationComplete(ChannelFuture future) {
+		if (future.isSuccess()) {
+			// do something....
+		} else {
+			// 输出错误信息
+			Throwable cause = future.cause();
+			cause.printStackTrace();
+			// do something....
+		}
+	}
+});
+
+
+
+通过实现ChannelInboundHandler或者ChannelOutboundHandler就可以完成用户自定义的应用逻辑处理程序，
+不过Netty已经帮你实现了一些基本操作，用户只需要继承并扩展ChannelInboundHandlerAdapter或ChannelOutboundHandlerAdapter来作为自定义实现的起始点。
+ChannelInboundHandlerAdapter与ChannelOutboundHandlerAdapter都继承于ChannelHandlerAdapter，该抽象类简单实现了ChannelHandler接口。
+
+
+对于处理入站消息，另外一种选择是继承SimpleChannelInboundHandler，它是Netty的一个继承于ChannelInboundHandlerAdapter的抽象类，
+并在其之上实现了自动释放资源的功能。
+
+我们在了解ByteBuf时就已经知道了Netty使用了一套自己实现的引用计数算法来主动释放资源，
+假设你的ChannelHandler继承于ChannelInboundHandlerAdapter或ChannelOutboundHandlerAdapter，
+那么你就有责任去管理你所分配的ByteBuf，一般来说，一个消息对象（ByteBuf）已经被消费（或丢弃）了，
+并且不会传递给ChannelHandler链中的下一个处理器（如果该消息到达了实际的传输层，那么当它被写入或Channel关闭时，都会被自动释放），
+那么你就需要去手动释放它。通过一个简单的工具类ReferenceCountUtil的release方法，就可以做到这一点。
+
+<---------------------ChannelPipeline------------------------>
+
+
+

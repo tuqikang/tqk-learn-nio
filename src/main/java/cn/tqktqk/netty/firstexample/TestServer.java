@@ -33,7 +33,7 @@ public class TestServer {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             //   boss吧连接发送给worker，worker来完成真正的处理            通过反射创建对应管道                             对应处理器
             serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new TestServerInitializer());
-            //绑定8899端口
+            //绑定8899端口 异步
             ChannelFuture channelFuture = serverBootstrap.bind(8899).sync();
             //关闭的监听
             channelFuture.channel().closeFuture().sync();
